@@ -1,0 +1,19 @@
+{
+  "name": "rminimist",
+  "description": "Parse argument options",
+  "version": "1.0.0",
+  "author": "Rico Sta. Cruz <rico@ricostacruz.com> (http://ricostacruz.com)",
+  "devDependencies": {
+    "tape": "4.6.0"
+  },
+  "keywords": [
+    "argv",
+    "getopt",
+    "minimist"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test.js"
+  }
+}
