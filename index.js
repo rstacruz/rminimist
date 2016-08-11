@@ -95,8 +95,8 @@ function push (keys, value, arg, args, options, result) {
       result = setResult(result, key, val, options)
     } else if (options.stopEarly) {
       // Not recognized, and stop early
-        result._ = result._.concat([arg]).concat(args)
-        return result
+      result._ = result._.concat([arg]).concat(args)
+      return result
     } else if (args.length === 0 && !hasValue) {
       // Not recognized, and boolean
       result = setResult(result, key, true, options)
