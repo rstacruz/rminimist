@@ -3,9 +3,13 @@
   "description": "Parse argument options",
   "version": "1.0.0",
   "author": "Rico Sta. Cruz <rico@ricostacruz.com> (http://ricostacruz.com)",
+  "bugs": {
+    "url": "https://github.com/rstacruz/rminimist/issues"
+  },
   "devDependencies": {
     "tape": "4.6.0"
   },
+  "homepage": "https://github.com/rstacruz/rminimist#readme",
   "keywords": [
     "argv",
     "getopt",
@@ -13,6 +17,10 @@
   ],
   "license": "MIT",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rstacruz/rminimist.git"
+  },
   "scripts": {
     "test": "tape test.js"
   }
