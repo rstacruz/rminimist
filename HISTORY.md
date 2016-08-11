@@ -1,3 +1,10 @@
+## [v1.1.0]
+> Aug 11, 2016
+
+- Implement amending support.
+
+[v1.1.0]: https://github.com/rstacruz/rminimist/compare/v1.0.1...v1.1.0
+
 ## [v1.0.1]
 > Aug 11, 2016
 
