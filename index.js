@@ -53,6 +53,8 @@ function pass (args, options, result) {
     return push(m[1], m[2], arg, args, options, result)
   } else if ((m = arg.match(/^--([a-zA-Z0-9]+)$/))) {
     return push(m[1], undefined, arg, args, options, result)
+  } else if ((m = arg.match(/^--no-([a-zA-Z0-9]+)$/))) {
+    return push(m[1], false, arg, args, options, result)
   } else if ((m = arg.match(/^--([a-zA-Z0-9]+)=(.*?)$/))) {
     return push(m[1], m[2], arg, args, options, result)
   } else if (options['--'] && arg === '--') {
@@ -73,27 +75,27 @@ function push (key, value, arg, args, options, result) {
   var alias = options.alias && options.alias[key]
   if (alias) key = alias
 
+  var hasValue = typeof value !== 'undefined'
+
   if (has(options.boolean, key)) {
     // Boolean
-    result[key] = true
+    result[key] = hasValue ? cast(value) : true
   } else if (has(options.string, key)) {
     // String
-    if (args.length === 0 && typeof value === 'undefined') {
+    if (args.length === 0 && !hasValue) {
       throw new Error(flag(key) + ' requires a string')
     }
-    result[key] = cast(value || args.shift())
-  } else {
-    // Not recognized
-    if (options.stopEarly) {
+    result[key] = hasValue ? cast(value) : cast(args.shift())
+  } else if (options.stopEarly) {
+    // Not recognized, and stop early
       result._ = result._.concat([arg]).concat(args)
       return result
-    }
-
-    if (args.length === 0 && typeof value === 'undefined') {
-      result[key] = true
-    } else {
-      result[key] = cast(value || args.shift())
-    }
+  } else if (args.length === 0 && !hasValue) {
+    // Not recognized, and boolean
+    result[key] = true
+  } else {
+    // Not recognized, and has value
+    result[key] = hasValue ? cast(value) : cast(args.shift())
   }
 
   return pass(args, options, result)
@@ -104,7 +106,9 @@ function push (key, value, arg, args, options, result) {
  */
 
 function cast (value) {
-  if (isNaN(+value)) {
+  if (typeof value !== 'string') {
+    return value
+  } else if (isNaN(+value)) {
     return value
   } else {
     return +value

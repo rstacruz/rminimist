@@ -46,6 +46,12 @@ test('rminimist', function (t) {
     t.deepEqual(err.message, '--file requires a string', 'string required, --')
   }
 
+  result = rminimist(['--no-debug'], { boolean: ['debug'] })
+  t.deepEqual(result, {
+    _: [],
+    debug: false
+  }, '--no-debug')
+
   result = rminimist(['--file=hi.txt'], { string: ['file'] })
   t.deepEqual(result, {
     _: [],
