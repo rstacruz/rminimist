@@ -1,4 +1,18 @@
 /*
+ * Object.assign semi-polyfill
+ * (only enough for our purposes at least)
+ */
+
+var assign = Object.assign || function (dest, src) {
+  for (var key in src) {
+    if (src.hasOwnProperty(key)) {
+      dest[key] = src[key]
+    }
+  }
+  return dest
+}
+
+/*
  * Parses `args`.
  *
  * Options:
@@ -16,6 +30,10 @@ function rminimist (args, options) {
   if (!options) options = {}
   var result = { _: [] }
 
+  if (options.default) {
+    assign(result, options.default)
+  }
+
   return pass(args, options, result)
 }
 
@@ -31,23 +49,19 @@ function pass (args, options, result) {
   var m
   if ((m = arg.match(/^-([a-zA-Z0-9])$/))) {
     return push(m[1], undefined, arg, args, options, result)
-  }
-
-  if ((m = arg.match(/^--([a-zA-Z0-9]+)$/))) {
-    return push(m[1], undefined, arg, args, options, result)
-  }
-
-  if ((m = arg.match(/^--([a-zA-Z0-9]+)=(.*?)$/))) {
+  } else if ((m = arg.match(/^-([a-zA-Z0-9])([0-9].*?)$/))) {
     return push(m[1], m[2], arg, args, options, result)
-  }
-
-  if (options['--'] && arg === '--') {
+  } else if ((m = arg.match(/^--([a-zA-Z0-9]+)$/))) {
+    return push(m[1], undefined, arg, args, options, result)
+  } else if ((m = arg.match(/^--([a-zA-Z0-9]+)=(.*?)$/))) {
+    return push(m[1], m[2], arg, args, options, result)
+  } else if (options['--'] && arg === '--') {
     result._ = result._.concat(args)
     return result
+  } else {
+    result._.push(arg)
+    return pass(args, options, result)
   }
-
-  result._.push(arg)
-  return pass(args, options, result)
 }
 
 /*
@@ -64,10 +78,10 @@ function push (key, value, arg, args, options, result) {
     result[key] = true
   } else if (has(options.string, key)) {
     // String
-    if (args.length === 0 && typeof value === undefined) {
+    if (args.length === 0 && typeof value === 'undefined') {
       throw new Error(flag(key) + ' requires a string')
     }
-    result[key] = value || args.shift()
+    result[key] = cast(value || args.shift())
   } else {
     // Not recognized
     if (options.stopEarly) {
@@ -75,14 +89,26 @@ function push (key, value, arg, args, options, result) {
       return result
     }
 
-    if (args.length === 0) {
+    if (args.length === 0 && typeof value === 'undefined') {
       result[key] = true
     } else {
-      result[key] = value || args.shift()
+      result[key] = cast(value || args.shift())
     }
   }
 
   return pass(args, options, result)
+}
+
+/*
+ * Turns values into numbers if needed.
+ */
+
+function cast (value) {
+  if (isNaN(+value)) {
+    return value
+  } else {
+    return +value
+  }
 }
 
 /*

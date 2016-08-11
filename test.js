@@ -10,6 +10,12 @@ test('rminimist', function (t) {
     a: true
   }, '-a')
 
+  result = rminimist(['-a4'])
+  t.deepEqual(result, {
+    _: [],
+    a: 4
+  }, '-a4')
+
   result = rminimist(['-a'], { alias: { 'a': 'accept' } })
   t.deepEqual(result, {
     _: [],
@@ -68,6 +74,22 @@ test('rminimist', function (t) {
     'file': 'hi.txt',
     'x': 'y'
   }, 'mixed')
+
+  result = rminimist(['--file=hi.txt'], { default: { x: true } })
+  t.deepEqual(result, {
+    _: [],
+    'x': true,
+    'file': 'hi.txt'
+  }, 'default')
+
+  result = rminimist(['--file=hi.txt'], { default: { x: true } })
+  t.deepEqual(result, {
+    _: [],
+    'x': true,
+    'file': 'hi.txt'
+  }, 'default overriding')
+
+  // result = rminimist(['-x', '3', '-y', '4', '-n5', '-abc', '--beep=boop', 'foo', 'bar', 'baz'])
 
   t.end()
 })
