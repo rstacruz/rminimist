@@ -10,11 +10,25 @@ test('rminimist', function (t) {
     a: true
   }, '-a')
 
-  result = rminimist(['-a4'])
+  result = rminimist(['-a', '-b'])
+  t.deepEqual(result, {
+    _: [],
+    a: true,
+    b: true
+  }, '-a', '-b')
+
+  result = rminimist(['-a', '4'])
   t.deepEqual(result, {
     _: [],
     a: 4
-  }, '-a4')
+  }, '-a 4')
+
+  result = rminimist(['-ab'])
+  t.deepEqual(result, {
+    _: [],
+    a: true,
+    b: true
+  }, '-ab')
 
   result = rminimist(['-a'], { alias: { 'a': 'accept' } })
   t.deepEqual(result, {
@@ -95,7 +109,30 @@ test('rminimist', function (t) {
     'file': 'hi.txt'
   }, 'default overriding')
 
-  // result = rminimist(['-x', '3', '-y', '4', '-n5', '-abc', '--beep=boop', 'foo', 'bar', 'baz'])
+  result = rminimist(['--alias=A'], { array: ['alias'] })
+  t.deepEqual(result, {
+    _: [],
+    'alias': ['A']
+  }, 'array, one')
+
+  result = rminimist(['--alias=A', '--alias=B'], { array: ['alias'] })
+  t.deepEqual(result, {
+    _: [],
+    'alias': ['A', 'B']
+  }, 'array, many')
+
+  result = rminimist(['-x', '3', '-y', '4', '-n5', '-abc', '--beep=boop', 'foo', 'bar', 'baz'])
+  t.deepEqual(result, {
+    '5': true,
+    _: ['foo', 'bar', 'baz'],
+    a: true,
+    b: true,
+    beep: 'boop',
+    c: true,
+    n: true,
+    x: 3,
+    y: 4
+  })
 
   t.end()
 })
