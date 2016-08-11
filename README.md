@@ -4,6 +4,8 @@
 
 This works exactly like [minimist][], with a few exceptions (see [difference with minimist](#difference-with-minimist)).
 
+[![Status](https://travis-ci.org/rstacruz/rminimist.svg?branch=master)](https://travis-ci.org/rstacruz/rminimist "See test builds")
+
 ## Usage
 
 ```
