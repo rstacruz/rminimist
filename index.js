@@ -14,16 +14,6 @@ var assign = Object.assign || function (dest, src) {
 
 /*
  * Parses `args`.
- *
- * Options:
- *
- * - `string`
- * - `boolean`
- * - `alias`
- * - `default`
- * - `stopEarly`
- * - `--`
- * - `unknown`
  */
 
 function rminimist (args, options) {
@@ -121,6 +111,11 @@ function push (keys, value, arg, args, options, result) {
   return pass(args, options, result)
 }
 
+/*
+ * Internal: sets `key` to `value` in `result` as needed.
+ * Takes arrays into consideration.
+ */
+
 function setResult (result, key, value, options) {
   if (has(options.array, key)) {
     if (result[key]) {
@@ -144,11 +139,7 @@ function has (haystack, needle) {
 }
 
 function flag (key) {
-  if (key.length === 1) {
-    return '-' + key
-  } else {
-    return '--' + key
-  }
+  return (key.length === 1 ? '-' : '--') + key
 }
 
 module.exports = rminimist
