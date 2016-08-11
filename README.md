@@ -2,7 +2,7 @@
 
 > Parse argument options
 
-This works exactly like [minimist](https://www.npmjs.com/package/minimist), with a few exceptions (see [difference with minimist](#difference-with-minimist)).
+This works exactly like [minimist][], with a few exceptions (see [difference with minimist](#difference-with-minimist)).
 
 ## Usage
 
@@ -11,15 +11,14 @@ npm install --save rminimist
 ```
 
 ```js
-var parseArgs = require('rminimist')  // es5
-import parseArgs from 'rminimist'     // es6
+var argv = require('rminimist')(process.argv.slice(2))
 ```
 
 ## API
 
-### parseArgs
+### rminimist
 
-> `parseArgs(args, [options])`
+> `rminimist(args, [options])`
 
 Return an argument object argv populated with the array arguments from `args`.
 
@@ -37,7 +36,8 @@ Options can be:
 - `opts.default` - an object mapping string argument names to default values
 - `opts.stopEarly` - when true, populate argv._ with everything after the first non-option
 - `opts['--']` - when true, populate argv._ with everything before the -- and argv['--'] with everything after the --. Here's an example:
-- `opts.unknown` - a function which is invoked with a command line parameter not defined in the opts configuration object. If the function returns false, the unknown option is not added to argv.
+
+See [minimist] for more details and examples.
 
 ## Difference with minimist
 
@@ -137,6 +137,8 @@ rminimist tries to be less "smart" than minimist. While minimist is often usable
   rminimist(['-a', 'hello'], { boolean: ['a'] })
   ```
 
+- The `unknown` option is not supported.
+
 ## Thanks
 
 **rminimist** © 2016+, Rico Sta. Cruz. Released under the [MIT] License.<br>
@@ -148,3 +150,4 @@ Authored and maintained by Rico Sta. Cruz with help from contributors ([list][co
 
 [MIT]: http://mit-license.org/
 [contributors]: http://github.com/rstacruz/rminimist/contributors
+[minimist]: https://www.npmjs.com/package/minimist
