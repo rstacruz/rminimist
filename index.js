@@ -45,8 +45,12 @@ function pass (args, options, result) {
     return push([m[1]], false, arg, args, options, result)
   } else if ((m = arg.match(/^--([a-zA-Z0-9]+)=(.*?)$/))) {
     return push([m[1]], m[2], arg, args, options, result)
-  } else if (options['--'] && arg === '--') {
-    result._ = result._.concat(args)
+  } else if (arg === '--') {
+    if (options['--']) {
+      result['--'] = args
+    } else {
+      result._ = result._.concat(args)
+    }
     return result
   } else {
     result._.push(arg)

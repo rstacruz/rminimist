@@ -84,10 +84,23 @@ test('rminimist', function (t) {
     file: 'hi.txt'
   }, 'string: --file=hi.txt')
 
-  result = rminimist(['--', '--file=hi.txt'], { string: ['file'], '--': true })
+  result = rminimist(['--', '--file=hi.txt'], { string: ['file'] })
   t.deepEqual(result, {
     _: ['--file=hi.txt']
   }, '--')
+
+  result = rminimist(['--', '--file=hi.txt'], { string: ['file'], '--': true })
+  t.deepEqual(result, {
+    _: [],
+    '--': ['--file=hi.txt']
+  }, '-- option')
+
+  result = rminimist(['a', '--', '--file=hi.txt'], { string: ['file'], '--': true })
+  t.deepEqual(result, {
+    _: ['a'],
+    '--': ['--file=hi.txt']
+  }, '-- option')
+
 
   result = rminimist(['--file=hi.txt', '-x'], { string: ['file'], stopEarly: true })
   t.deepEqual(result, {
