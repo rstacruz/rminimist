@@ -2,6 +2,12 @@
 
 > Parse argument options
 
+```js
+> args = ['--debug', '-o', 'doc.html', 'doc.md']
+> rminimist(args, { alias: { o: 'output' } })
+{ _: ['doc.md'], debug: true, output: 'doc.html' }
+```
+
 This works exactly like [minimist][], with a few exceptions (see [difference with minimist](#difference-with-minimist)).
 
 [![Status](https://travis-ci.org/rstacruz/rminimist.svg?branch=master)](https://travis-ci.org/rstacruz/rminimist "See test builds")
