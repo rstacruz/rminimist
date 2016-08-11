@@ -20,8 +20,20 @@ test('rminimist', function (t) {
   result = rminimist(['-a', '4'])
   t.deepEqual(result, {
     _: [],
+    a: '4'
+  }, '-a 4, default')
+
+  result = rminimist(['-a', '4'], { string: ['a'] })
+  t.deepEqual(result, {
+    _: [],
+    a: '4'
+  }, '-a 4, string')
+
+  result = rminimist(['-a', '4'], { number: ['a'] })
+  t.deepEqual(result, {
+    _: [],
     a: 4
-  }, '-a 4')
+  }, '-a 4, number')
 
   result = rminimist(['-ab'])
   t.deepEqual(result, {
@@ -130,8 +142,8 @@ test('rminimist', function (t) {
     beep: 'boop',
     c: true,
     n: true,
-    x: 3,
-    y: 4
+    x: '3',
+    y: '4'
   })
 
   result = rminimist(['-a', '--file=doc.txt'], { default: { file: 'default.txt' } })

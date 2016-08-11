@@ -25,8 +25,6 @@ Return an argument object argv populated with the array arguments from `args`.
 
 `argv._` contains all the arguments that didn't have an option associated with them.
 
-Numeric-looking arguments will be returned as numbers unless `opts.string` or `opts.boolean` is set for that argument name.
-
 Any arguments after `--` will not be parsed and will end up in `argv._`.
 
 Options can be:
@@ -34,6 +32,7 @@ Options can be:
 - `opts.string` - an array of strings argument names to always treat as strings
 - `opts.boolean` - an array of strings to always treat as booleans.
 - `opts.array` - an array of strings to treat as arrays. (only in rminimist)
+- `opts.number` - an array of strings to treat as numbers. (only in rminimist)
 - `opts.alias` - an object mapping string names to strings or arrays of string argument names to use as aliases
 - `opts.default` - an object mapping string argument names to default values
 - `opts.stopEarly` - when true, populate argv._ with everything after the first non-option
@@ -41,6 +40,8 @@ Options can be:
 - `opts.unknown` - a function which is invoked with a command line parameter not defined in the opts configuration object. If the function returns false, the unknown option is not added to argv.
 
 ## Difference with minimist
+
+rminimist tries to be less "smart" than minimist. While minimist is often usable with minimal options, rminimist prefers you to be explicit.
 
 - Aliases are not duplicated. They will always resolve to the canonical version.
 
@@ -66,7 +67,7 @@ Options can be:
   { '4': true, _: [], n: true }
   ```
 
-- Booleans don't default to `false`. They're simply not defined.
+- Booleans don't default to `false`. They're simply not defined if not present.
 
   ```js
   minimist(['--debug'], { boolean: [ 'debug', 'verbose' ] })
@@ -78,7 +79,7 @@ Options can be:
   { _: [], debug: true }
   ```
 
-- Values are overridden, not appended as an array.
+- Values are overridden, not appended as an array. Use the `array` option to explicitly enable the array behavior.
 
   ```js
   minimist(['--watch=lib', '--watch=test'])
@@ -90,7 +91,7 @@ Options can be:
   { _: [], watch: 'test' }
   ```
 
-- A new option `array` is introduced to make things into an array.
+- A new option `array` is introduced to make values into an array.
 
   ```js
   minimist(['--watch=lib', '--watch=test'], { array: ['watch'] })
@@ -111,7 +112,22 @@ Options can be:
   { _: [], a: true, file: 'doc.txt' }
   ```
 
-- `boolean: true` and `string: true` are not supported.
+- Number-like values are never auto-cast to numbers. Use the `number` option instead.
+
+  ```js
+  // minimist
+  minimist(['--port', '4000'])
+  { _: [], port: 4000 }
+
+  // rminimist
+  rminimist(['--port', '4000'])
+  { _: [], port: '4000' }
+
+  rminimist(['--port', '4000'], { number: ['port'] })
+  { _: [], port: 4000 }
+  ```
+
+- `boolean: true` and `string: true` are not supported. Use the array syntax instead.
 
   ```js
   // minimist

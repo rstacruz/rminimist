@@ -80,14 +80,24 @@ function push (keys, value, arg, args, options, result) {
 
     if (has(options.boolean, key)) {
       // Boolean
-      val = hasValue ? cast(value) : true
+      val = hasValue ? value : true
       result = setResult(result, key, val, options)
     } else if (has(options.string, key)) {
       // String
       if (args.length === 0 && !hasValue) {
         throw new Error(flag(key) + ' requires a string')
       }
-      val = hasValue ? cast(value) : cast(args.shift())
+      val = hasValue ? value : args.shift()
+      result = setResult(result, key, val, options)
+    } else if (has(options.number, key)) {
+      // Number
+      if (args.length === 0 && !hasValue) {
+        throw new Error(flag(key) + ' requires a number')
+      }
+      val = +(hasValue ? value : args.shift())
+      if (isNaN(val)) {
+        throw new Error(flag(key) + ' requires a number')
+      }
       result = setResult(result, key, val, options)
     } else if (options.stopEarly) {
       // Not recognized, and stop early
@@ -98,13 +108,13 @@ function push (keys, value, arg, args, options, result) {
       result = setResult(result, key, true, options)
     } else if (hasValue) {
       // Not recognized, and has value
-      result = setResult(result, key, cast(value), options)
+      result = setResult(result, key, value, options)
     } else if (args[0].substr(0, 1) === '-') {
       // Not recognized, and has flag afterwards
       result = setResult(result, key, true, options)
     } else {
       // Not recognized, and has string afterwards
-      result = setResult(result, key, cast(args.shift()), options)
+      result = setResult(result, key, args.shift(), options)
     }
   }
 
@@ -123,20 +133,6 @@ function setResult (result, key, value, options) {
     result[key] = value
   }
   return result
-}
-
-/*
- * Turns values into numbers if needed.
- */
-
-function cast (value) {
-  if (typeof value !== 'string') {
-    return value
-  } else if (isNaN(+value)) {
-    return value
-  } else {
-    return +value
-  }
 }
 
 /*
