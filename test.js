@@ -162,5 +162,21 @@ test('rminimist', function (t) {
   result = rminimist(['-a', '--file=doc.txt'], { default: { file: 'default.txt' } })
   t.deepEqual(Object.keys(result), [ '_', 'a', 'file' ], 'order')
 
+  result = rminimist(['-a'])
+  result = rminimist(['-b'], {}, result)
+  t.deepEqual(result, {
+    _: [],
+    a: true,
+    b: true
+  }, 'amend, simple')
+
+  result = rminimist(['-a', '1'], { boolean: ['a'] })
+  result = rminimist(['-b', '2'], { boolean: ['b'] }, result)
+  t.deepEqual(result, {
+    _: ['1', '2'],
+    a: true,
+    b: true
+  }, 'amend, with args')
+
   t.end()
 })

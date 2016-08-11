@@ -16,9 +16,14 @@ var assign = Object.assign || function (dest, src) {
  * Parses `args`.
  */
 
-function rminimist (args, options) {
+function rminimist (args, options, result) {
   if (!options) options = {}
-  var result = { _: [] }
+  if (!result) {
+    result = {}
+  } else {
+    result = assign({}, result)
+  }
+  if (!result._) result._ = []
 
   if (options.default) {
     assign(result, options.default)

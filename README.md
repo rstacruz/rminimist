@@ -26,13 +26,15 @@ var argv = require('rminimist')(process.argv.slice(2))
 
 ### rminimist
 
-> `rminimist(args, [options])`
+> `rminimist(args, [options], [previous])`
 
 Return an argument object argv populated with the array arguments from `args`.
 
 `argv._` contains all the arguments that didn't have an option associated with them.
 
 Any arguments after `--` will not be parsed and will end up in `argv._`.
+
+If `previous` is given, results will be amended into it.
 
 Options can be:
 
@@ -46,6 +48,17 @@ Options can be:
 - `opts['--']` - when true, populate *argv._* with everything before the *--* and *argv['--']* with everything after the *--*.
 
 See [minimist] for more details and examples.
+
+### Amending
+
+You can add to a previous `rminimist()` result by passing it as the third parameter.
+
+```js
+> result = rminimist(['-f']);
+> result = rminimist(['-d'], {}, result);
+> result
+{ _: [], f: true, d: true }
+```
 
 ## Difference with minimist
 
@@ -146,6 +159,15 @@ rminimist tries to be less "smart" than minimist. While minimist is often usable
   ```
 
 - The `unknown` option is not supported.
+
+- You can add to a previous `rminimist()` result by passing it as the third parameter.
+
+  ```js
+  > result = rminimist(['-f']);
+  > result = rminimist(['-d'], {}, result);
+  > result
+  { _: [], f: true, d: true }
+  ```
 
 ## Thanks
 
