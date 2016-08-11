@@ -134,5 +134,8 @@ test('rminimist', function (t) {
     y: 4
   })
 
+  result = rminimist(['-a', '--file=doc.txt'], { default: { file: 'default.txt' } })
+  t.deepEqual(Object.keys(result), [ '_', 'a', 'file' ], 'order')
+
   t.end()
 })
